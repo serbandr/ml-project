@@ -31,7 +31,7 @@ def leniency4Matrix(state, payoff_matrix, K):
     return fitness
 
 class LBQSinglePopulationDynamics(dynamics.SinglePopulationDynamics):
-    def __init__(self, payoff_matrix, K=10, T=1.):
+    def __init__(self, payoff_matrix, K=3, T=1.):
         """Initializes the single-population dynamics."""
         super().__init__(payoff_matrix, dynamics.boltzmannq)
         self.K = K
