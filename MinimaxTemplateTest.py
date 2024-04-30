@@ -1,6 +1,39 @@
 import pyspiel
 from absl import app
 import time
+import re
+import numpy as np
+from collections import Counter
+
+minimax_counter = 0
+
+
+def _symmetric_key(state):
+    """Generate symmetric keys for the given state."""
+
+    # Get number of cols and rows
+    num_cols = 0
+    num_rows = 0
+    game_string = str(state.get_game())
+    match = re.search(r'num_cols=(\d+),num_rows=(\d+)', game_string)
+    if match:
+        num_cols = ((5 + (int(match.group(1))-1)*2) + int(match.group(1)))
+        num_rows = ((5 + (int(match.group(2))-1)*2) + int(match.group(2)))
+
+    # Assuming state.observation_tensor() returns a flat list
+    observation_tensor = np.array(state.observation_tensor()).reshape(num_rows, num_cols)
+
+    # TODO : This optimization only increases the elapsed time (roughly x3) while the calls to minimax stay the same???
+
+    keys = [''.join('1' if val == 1.0 else '0' for val in observation_tensor.flat),
+           ''.join(''.join('1' if val == 1.0 else '0' for val in row[::-1]) for row in observation_tensor),
+           ''.join(''.join('1' if val == 1.0 else '0' for val in col) for col in np.flip(observation_tensor, axis=0))]
+
+    # TODO : If it's a square game, add diagonal symmetry
+    # keys = [''.join('1' if val == 1.0 else '0' for val in state.observation_tensor())]
+
+    return keys
+
 
 def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf'), transposition_table=None):
     """
@@ -18,6 +51,9 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
       The optimal value of the sub-game starting in state
     """
 
+    global minimax_counter
+    minimax_counter += 1
+
     # Check if state is terminal or if the player ID is valid
     if state.is_terminal() or not 0 <= state.current_player() < state.num_players() or not 0 <= maximizing_player_id < state.num_players():
         return state.player_return(maximizing_player_id)
@@ -26,10 +62,13 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
         transposition_table = {}
 
     # Observation tensor is the key (like '1111...000')
-    key = ''.join('1' if val == 1.0 else '0' for val in state.observation_tensor())
 
-    if key in transposition_table:
-        return transposition_table[key]
+    # Old : key = ''.join('1' if val == 1.0 else '0' for val in state.observation_tensor())
+    keys = _symmetric_key(state)
+
+    for key in keys:
+        if key in transposition_table:
+            return transposition_table[key]
 
     # Use Alpha-Beta pruning to speed up the process
     player = state.current_player()
@@ -40,7 +79,8 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
             alpha = max(alpha, value)
             if alpha >= beta:
                 break  # Beta cutoff
-        transposition_table[key] = value
+        for key in keys:
+            transposition_table[key] = value
         return value
     else:
         value = float('inf')
@@ -49,9 +89,9 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
             beta = min(beta, value)
             if beta <= alpha:
                 break  # Alpha cutoff
-        transposition_table[key] = value
+        for key in keys:
+            transposition_table[key] = value
         return value
-
 
 
 def minimax_search(game,
@@ -123,6 +163,8 @@ def main(_):
     end_time = time.time()
     elapsed_time = end_time - start_time
     print("Elapsed time: {:.2f} seconds".format(elapsed_time))
+    print("Number of calls to _minimax:", minimax_counter)
+
 
 if __name__ == "__main__":
     app.run(main)
