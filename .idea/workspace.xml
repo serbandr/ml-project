@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bdb9ed06-da4e-403a-b853-012fd66a1a86" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DotsAndBoxesTest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MinimaxTemplateTest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/example_dotsandboxes.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minimax_template.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LearningTest.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/LearningTest.ipynb" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Jupyter Notebook" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2fK36Dt6iHAuLHPAtFqaz3N5Z6a" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.DotsAndBoxesTest.executor": "Run",
+    "Python.MinimaxTemplateTest.executor": "Run",
+    "Python.dots_and_boxes_example.executor": "Run",
+    "Python.minimax_template.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/serba/OneDrive/Documenten/Github/ml-project",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\serba\OneDrive\Documenten\Github\ml-project" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\serba\OneDrive\Documenten\Github\ml-project" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-d68999036c7f-b11f5e8da5ad-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.14475.56" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bdb9ed06-da4e-403a-b853-012fd66a1a86" name="Changes" comment="" />
+      <created>1713535764856</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1713535764856</updated>
+      <workItem from="1713535765934" duration="1718000" />
+      <workItem from="1713791793705" duration="1780000" />
+      <workItem from="1713870337685" duration="4168000" />
+      <workItem from="1714137332838" duration="4732000" />
+      <workItem from="1714473361863" duration="7630000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/ml_project$minimax_template.coverage" NAME="minimax_template Coverage Results" MODIFIED="1714478344817" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ml_project$dots_and_boxes_example.coverage" NAME="dots_and_boxes_example Coverage Results" MODIFIED="1714476708530" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Local/JetBrains/PyCharm2023.3/remote_sources/1031524395/-25274385/open_spiel/python/examples" />
+    <SUITE FILE_PATH="coverage/ml_project$MinimaxTemplateTest.coverage" NAME="MinimaxTemplateTest Coverage Results" MODIFIED="1714482051687" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ml_project$DotsAndBoxesTest.coverage" NAME="DotsAndBoxesTest Coverage Results" MODIFIED="1714478183791" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
