@@ -35,24 +35,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.DotsAndBoxesTest.executor": "Run",
-    "Python.MinimaxTemplateTest.executor": "Run",
-    "Python.dots_and_boxes_example.executor": "Run",
-    "Python.minimax_template.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/serba/OneDrive/Documenten/Github/ml-project",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.DotsAndBoxesTest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.MinimaxTemplateTest.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dots_and_boxes_example.executor&quot;: &quot;Run&quot;,
+    &quot;Python.minimax_template.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/serba/OneDrive/Documenten/Github/ml-project&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\serba\OneDrive\Documenten\Github\ml-project" />
@@ -80,7 +80,8 @@
       <workItem from="1713791793705" duration="1780000" />
       <workItem from="1713870337685" duration="4168000" />
       <workItem from="1714137332838" duration="4732000" />
-      <workItem from="1714473361863" duration="11516000" />
+      <workItem from="1714473361863" duration="12666000" />
+      <workItem from="1714733297607" duration="11253000" />
     </task>
     <servers />
   </component>
@@ -90,7 +91,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ml_project$minimax_template.coverage" NAME="minimax_template Coverage Results" MODIFIED="1714478344817" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ml_project$dots_and_boxes_example.coverage" NAME="dots_and_boxes_example Coverage Results" MODIFIED="1714476708530" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Local/JetBrains/PyCharm2023.3/remote_sources/1031524395/-25274385/open_spiel/python/examples" />
-    <SUITE FILE_PATH="coverage/ml_project$MinimaxTemplateTest.coverage" NAME="MinimaxTemplateTest Coverage Results" MODIFIED="1714485958173" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ml_project$MinimaxTemplateTest.coverage" NAME="MinimaxTemplateTest Coverage Results" MODIFIED="1714746189525" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ml_project$DotsAndBoxesTest.coverage" NAME="DotsAndBoxesTest Coverage Results" MODIFIED="1714478183791" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

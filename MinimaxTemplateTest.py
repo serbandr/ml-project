@@ -6,7 +6,9 @@ import numpy as np
 from collections import Counter
 
 minimax_counter = 0
+trans_counter = 0
 
+import numpy as np
 
 def _symmetric_key(state):
     """Generate symmetric keys for the given state."""
@@ -17,17 +19,44 @@ def _symmetric_key(state):
     game_string = str(state.get_game())
     match = re.search(r'num_cols=(\d+),num_rows=(\d+)', game_string)
     if match:
-        num_cols = ((5 + (int(match.group(1))-1)*2) + int(match.group(1)))
-        num_rows = ((5 + (int(match.group(2))-1)*2) + int(match.group(2)))
+        num_cols = int(match.group(1))
+        num_rows = int(match.group(2))
 
     # Assuming state.observation_tensor() returns a flat list
-    observation_tensor = np.array(state.observation_tensor()).reshape(num_rows, num_cols)
+    observation_tensor = np.array(state.observation_tensor()).reshape(12, 12)
 
     # TODO : This optimization only increases the elapsed time (roughly x3) while the calls to minimax stay the same???
 
+    # TODO : Use state.dbn_string() instead of the obs tensor!!!!
+    dbns = state.dbn_string()
+    formatted_dbn_string = []
+    for i in range(0, num_rows*2+1):
+        if i % 2 == 0:
+            formatted_dbn_string.append([dbns[0:num_cols]])
+            dbns = dbns[num_cols:]
+        else:
+            formatted_dbn_string.append([dbns[0:num_cols+1]])
+            dbns = dbns[num_cols+1:]
+
+    keys = []
+
+    # TODO: run program again to see diagrams it's rows first then columns, so 2 arrays each having multiple subarrays, but its easy to flip after
+
+    # Create keys
+    print(formatted_dbn_string)
+
+    # Normal key
+    key = ''
+    for numarray in formatted_dbn_string:
+        key += str(numarray[0])
+    keys.append(key)
+
+    # Vertical symmetry
+
     keys = [''.join('1' if val == 1.0 else '0' for val in observation_tensor.flat),
-           ''.join(''.join('1' if val == 1.0 else '0' for val in row[::-1]) for row in observation_tensor),
-           ''.join(''.join('1' if val == 1.0 else '0' for val in col) for col in np.flip(observation_tensor, axis=0))]
+            ''.join('1' if val == 1.0 else '0' for val in np.flip(observation_tensor, axis=0).flat),
+            ''.join('1' if val == 1.0 else '0' for val in np.flip(observation_tensor, axis=1).flat),
+            ''.join('1' if val == 1.0 else '0' for val in np.flip(np.flip(observation_tensor, axis=0), axis=1).flat)]
 
     # TODO : If it's a square game, add diagonal symmetry
     # keys = [''.join('1' if val == 1.0 else '0' for val in state.observation_tensor())]
@@ -37,7 +66,7 @@ def _symmetric_key(state):
 
 def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf'), transposition_table=None):
     """
-    Implements a min-max algorithm with transposition tables
+    Implements a min-max algorithm with transposition tables and move ordering.
 
     Arguments:
       state: The current state node of the game.
@@ -51,27 +80,36 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
       The optimal value of the sub-game starting in state
     """
 
-    global minimax_counter
+    print(state.dbn_string())
+    print(state)
+
+    global minimax_counter, trans_counter
     minimax_counter += 1
 
     # Check if state is terminal or if the player ID is valid
     if state.is_terminal() or not 0 <= state.current_player() < state.num_players() or not 0 <= maximizing_player_id < state.num_players():
+        # TODO : Win margin instead of just plain win
         return state.player_return(maximizing_player_id)
 
     if transposition_table is None:
         transposition_table = {}
 
-    # Observation tensor is the key (like '1111...000')
+    player = state.current_player()
 
-    # Old : key = ''.join('1' if val == 1.0 else '0' for val in state.observation_tensor())
+    # Evaluate moves and order them based on evaluation scores
+    # moves = [(action, evaluate_move(state, action, player)) for action in state.legal_actions()]
+    # moves.sort(key=lambda x: x[1], reverse=True)  # Order moves in descending order of evaluation score
+
+    # Observation tensor is the key (like '1111...000')
     keys = _symmetric_key(state)
 
     for key in keys:
         if key in transposition_table:
-            return transposition_table[key]
+            if transposition_table[key][3] == player:
+                trans_counter += 1
+                return transposition_table[key][0]
 
     # Use Alpha-Beta pruning to speed up the process
-    player = state.current_player()
     if player == maximizing_player_id:
         value = float('-inf')
         for action in state.legal_actions():
@@ -80,7 +118,7 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
             if alpha >= beta:
                 break  # Beta cutoff
         for key in keys:
-            transposition_table[key] = value
+            transposition_table[key] = [value, alpha, beta, player]
         return value
     else:
         value = float('inf')
@@ -90,8 +128,10 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
             if beta <= alpha:
                 break  # Alpha cutoff
         for key in keys:
-            transposition_table[key] = value
+            transposition_table[key] = [value, alpha, beta, player]
         return value
+
+
 
 
 def minimax_search(game,
@@ -146,7 +186,7 @@ def main(_):
 
     games_list = pyspiel.registered_names()
     assert "dots_and_boxes" in games_list
-    game_string = "dots_and_boxes(num_rows=2,num_cols=2)"
+    game_string = "dots_and_boxes(num_rows=3,num_cols=3)"
     print("Creating game: {}".format(game_string))
 
     game = pyspiel.load_game(game_string)
@@ -164,6 +204,7 @@ def main(_):
     elapsed_time = end_time - start_time
     print("Elapsed time: {:.2f} seconds".format(elapsed_time))
     print("Number of calls to _minimax:", minimax_counter)
+    print("Number of times trans table accessed", trans_counter)
 
 
 if __name__ == "__main__":
