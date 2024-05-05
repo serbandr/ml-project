@@ -87,7 +87,7 @@ def _symmetric_key(state):
     num_horiz_lines = num_cols * (1 + num_rows)
     formatted_dbn_string = [dbns[0:num_horiz_lines], dbns[num_horiz_lines:]]
 
-    # Split each part up further in subparts (per row or per columns so to speak)
+    # Split each part up further in sub-parts (per row or per columns so to speak)
 
     horiz_string = formatted_dbn_string[0]
     split_array = [''.join(horiz_string[i:i + num_cols]) for i in range(0, len(horiz_string), num_cols)]
@@ -116,8 +116,6 @@ def _symmetric_key(state):
     keys.append(''.join([''.join(inner) for inner in [formatted_dbn_string[0], vert_lines]]))
     # Both symmetries
     keys.append(''.join([''.join(inner) for inner in [horiz_lines, vert_lines]]))
-
-    # TODO : If it's a square game, add diagonal symmetry
 
     return keys
 
@@ -157,6 +155,8 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
 
     keys = _symmetric_key(state)
 
+    print(len(transposition_table))
+
     for key in keys:
         if key in transposition_table:
             if transposition_table[key][3] == player:
@@ -169,7 +169,7 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
         for action in state.legal_actions():
             value = max(value, _minimax(state.child(action), maximizing_player_id, alpha, beta, transposition_table))
             alpha = max(alpha, value)
-            if alpha >= beta:
+            if beta <= alpha:
                 break  # Beta cutoff
         transposition_table[keys[0]] = [value, alpha, beta, player]
         return value
@@ -237,8 +237,8 @@ def main(_):
 
     games_list = pyspiel.registered_names()
     assert "dots_and_boxes" in games_list
-    num_rows = 5
-    num_cols = 5
+    num_rows = 3
+    num_cols = 3
     game_string = "dots_and_boxes(num_rows=" + str(num_rows) + ",num_cols=" + str(num_cols) + ")"
     print("Creating game: {}".format(game_string))
 
@@ -255,7 +255,7 @@ def main(_):
     # Print the time
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print("Elapsed time: {:.2f} seconds".format(elapsed_time))
+    print("Elapsed time: {:.2f} milliseconds".format(elapsed_time*1000))
     print("Number of calls to _minimax:", minimax_counter)
     print("Number of times trans table accessed", trans_counter)
 
