@@ -11,6 +11,8 @@ trans_counter = 0
 num_cols = 0
 num_rows = 0
 
+# ------------------- EVERYTHING BELOW HERE IS FROM THEIR EXAMPLE TO USE AS HELPER FUNCTIONS -----------------------
+
 
 def part2num(part):
     p = {'h': 0, 'horizontal': 0,  # Who has set the horizontal line (top of cell)
@@ -52,6 +54,8 @@ def get_observation_state(obs_tensor, row, col, part, as_str=True):
         is_state = num2state(is_state)
     return is_state
 
+# ------------------- EVERYTHING ABOVE HERE IS FROM THEIR EXAMPLE TO USE AS HELPER FUNCTIONS -----------------------
+
 
 def _get_owned_cells(state, maximizing_player_id):
     # So basically get the current state, use the pre-given functions to get which players own which cells
@@ -78,8 +82,12 @@ def _symmetric_key(state):
 
     dbns = state.dbn_string()
 
+    # Split it up in 2 parts, one for the horizontal lines and one for the vertical lines
+
     num_horiz_lines = num_cols * (1 + num_rows)
     formatted_dbn_string = [dbns[0:num_horiz_lines], dbns[num_horiz_lines:]]
+
+    # Split each part up further in subparts (per row or per columns so to speak)
 
     horiz_string = formatted_dbn_string[0]
     split_array = [''.join(horiz_string[i:i + num_cols]) for i in range(0, len(horiz_string), num_cols)]
@@ -88,17 +96,14 @@ def _symmetric_key(state):
     vert_string = formatted_dbn_string[1]
     split_array = [''.join(vert_string[i:i + num_rows]) for i in range(0, len(vert_string), num_rows)]
 
-    # Now reformat it, so it's top to bottom vertically, and then left to right
+    # Now reformat the vertical part, so it's top to bottom vertically, and then left to right
     split_array_formatted = []
     for i in range(len(split_array[0])):
         split_array_formatted.append(''.join([elem[i] for elem in split_array]))
     formatted_dbn_string[1] = split_array_formatted
 
-    # print(state.dbn_string())
-    # print(state)
-
-    # print("DBN String")
-    # print(formatted_dbn_string)
+    # In the end for a 4x5 dots and boxes you'd have an array of the form
+    # [['11111', '11111', '11111', '11111', '11111', '11111'], ['111101', '111111', '111101', '111011', '111110']]
 
     keys = []
     # Normal key
@@ -112,20 +117,7 @@ def _symmetric_key(state):
     # Both symmetries
     keys.append(''.join([''.join(inner) for inner in [horiz_lines, vert_lines]]))
 
-    # print("Symmetries")
-    # print([horiz_lines, vert_lines])
-
     # TODO : If it's a square game, add diagonal symmetry
-
-    # # Assuming state.observation_tensor() returns a flat list
-    # observation_tensor = np.array(state.observation_tensor()).reshape(12, 12)
-    # # Vertical symmetry
-    #
-    # keys = [''.join('1' if val == 1.0 else '0' for val in observation_tensor.flat),
-    #         ''.join('1' if val == 1.0 else '0' for val in np.flip(observation_tensor, axis=0).flat),
-    #         ''.join('1' if val == 1.0 else '0' for val in np.flip(observation_tensor, axis=1).flat),
-    #         ''.join('1' if val == 1.0 else '0' for val in np.flip(np.flip(observation_tensor, axis=0), axis=1).flat)]
-    # keys = [''.join('1' if val == 1.0 else '0' for val in state.observation_tensor())]
 
     return keys
 
@@ -163,11 +155,6 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
 
     player = state.current_player()
 
-    # Evaluate moves and order them based on evaluation scores
-    # moves = [(action, evaluate_move(state, action, player)) for action in state.legal_actions()]
-    # moves.sort(key=lambda x: x[1], reverse=True)  # Order moves in descending order of evaluation score
-
-    # Observation tensor is the key (like '1111...000')
     keys = _symmetric_key(state)
 
     for key in keys:

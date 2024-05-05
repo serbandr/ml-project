@@ -5,9 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bdb9ed06-da4e-403a-b853-012fd66a1a86" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MinimaxTemplateTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/MinimaxTemplateTest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example_dotsandboxes.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/example_dotsandboxes.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +81,7 @@
       <workItem from="1714137332838" duration="4732000" />
       <workItem from="1714473361863" duration="12666000" />
       <workItem from="1714733297607" duration="11378000" />
-      <workItem from="1714897004009" duration="9564000" />
+      <workItem from="1714897004009" duration="9866000" />
     </task>
     <servers />
   </component>
@@ -93,7 +91,7 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ml_project$minimax_template.coverage" NAME="minimax_template Coverage Results" MODIFIED="1714478344817" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ml_project$dots_and_boxes_example.coverage" NAME="dots_and_boxes_example Coverage Results" MODIFIED="1714476708530" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$USER_HOME$/AppData/Local/JetBrains/PyCharm2023.3/remote_sources/1031524395/-25274385/open_spiel/python/examples" />
-    <SUITE FILE_PATH="coverage/ml_project$MinimaxTemplateTest.coverage" NAME="MinimaxTemplateTest Coverage Results" MODIFIED="1714907885244" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ml_project$MinimaxTemplateTest.coverage" NAME="MinimaxTemplateTest Coverage Results" MODIFIED="1714908150433" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/ml_project$DotsAndBoxesTest.coverage" NAME="DotsAndBoxesTest Coverage Results" MODIFIED="1714478183791" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
