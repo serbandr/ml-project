@@ -8,17 +8,71 @@ from collections import Counter
 minimax_counter = 0
 trans_counter = 0
 
+num_cols = 0
+num_rows = 0
+
+
+def part2num(part):
+    p = {'h': 0, 'horizontal': 0,  # Who has set the horizontal line (top of cell)
+         'v': 1, 'vertical': 1,  # Who has set the vertical line (left of cell)
+         'c': 2, 'cell': 2}  # Who has won the cell
+    return p.get(part, part)
+
+
+def state2num(state):
+    s = {'e': 0, 'empty': 0,
+         'p1': 1, 'player1': 1,
+         'p2': 2, 'player2': 2}
+    return s.get(state, state)
+
+
+def num2state(state):
+    s = {0: 'empty', 1: 'player1', 2: 'player2'}
+    return s.get(state, state)
+
+
+def get_observation(obs_tensor, state, row, col, part):
+    num_cells = (num_rows + 1) * (num_cols + 1)
+    num_parts = 3  # (horizontal, vertical, cell)
+
+    state = state2num(state)
+    part = part2num(part)
+    idx = part \
+          + (row * (num_cols + 1) + col) * num_parts \
+          + state * (num_parts * num_cells)
+    return obs_tensor[idx]
+
+
+def get_observation_state(obs_tensor, row, col, part, as_str=True):
+    is_state = None
+    for state in range(3):
+        if get_observation(obs_tensor, state, row, col, part) == 1.0:
+            is_state = state
+    if as_str:
+        is_state = num2state(is_state)
+    return is_state
+
+
+def _get_owned_cells(state, maximizing_player_id):
+    # So basically get the current state, use the pre-given functions to get which players own which cells
+    # and return the amount of owned cells for each player as an array [x, y]
+
+    player1_cells = 0
+    player2_cells = 0
+
+    for i in range(0, num_rows):
+        for j in range(0, num_cols):
+            owned_cell = get_observation_state(state.observation_tensor(maximizing_player_id), i, j, 'c')
+            if owned_cell == "player1":
+                player1_cells += 1
+            elif owned_cell == "player2":
+                player2_cells += 1
+
+    return [player1_cells, player2_cells]
+
+
 def _symmetric_key(state):
     """Generate symmetric keys for the given state."""
-
-    # Get number of cols and rows
-    num_cols = 0
-    num_rows = 0
-    game_string = str(state.get_game())
-    match = re.search(r'num_cols=(\d+),num_rows=(\d+)', game_string)
-    if match:
-        num_cols = int(match.group(1))
-        num_rows = int(match.group(2))
 
     # Use the dbns!
 
@@ -32,11 +86,16 @@ def _symmetric_key(state):
     formatted_dbn_string[0] = split_array
 
     vert_string = formatted_dbn_string[1]
-    split_array = [''.join(vert_string[i:i + num_rows+1]) for i in range(0, len(vert_string), num_rows+1)]
+    split_array = [''.join(vert_string[i:i + num_rows]) for i in range(0, len(vert_string), num_rows)]
+
+    # Now reformat it, so it's top to bottom vertically, and then left to right
     split_array_formatted = []
     for i in range(len(split_array[0])):
         split_array_formatted.append(''.join([elem[i] for elem in split_array]))
     formatted_dbn_string[1] = split_array_formatted
+
+    # print(state.dbn_string())
+    # print(state)
 
     # print("DBN String")
     # print(formatted_dbn_string)
@@ -52,6 +111,7 @@ def _symmetric_key(state):
     keys.append(''.join([''.join(inner) for inner in [formatted_dbn_string[0], vert_lines]]))
     # Both symmetries
     keys.append(''.join([''.join(inner) for inner in [horiz_lines, vert_lines]]))
+
     # print("Symmetries")
     # print([horiz_lines, vert_lines])
 
@@ -72,7 +132,7 @@ def _symmetric_key(state):
 
 def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf'), transposition_table=None):
     """
-    Implements a min-max algorithm with transposition tables and move ordering.
+    Implements a min-max algorithm with transposition tables.
 
     Arguments:
       state: The current state node of the game.
@@ -86,16 +146,17 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
       The optimal value of the sub-game starting in state
     """
 
-    # print(state.dbn_string())
-    # print(state)
-
     global minimax_counter, trans_counter
     minimax_counter += 1
 
     # Check if state is terminal or if the player ID is valid
-    if state.is_terminal() or not 0 <= state.current_player() < state.num_players() or not 0 <= maximizing_player_id < state.num_players():
-        # TODO : Win margin instead of just plain win
-        return state.player_return(maximizing_player_id)
+    if state.is_terminal():
+        # Calculate the win margin (nr. of boxes the maximizing player has over the minimizing player)
+
+        margin = (_get_owned_cells(state, maximizing_player_id)[maximizing_player_id] -
+                  _get_owned_cells(state, maximizing_player_id)[abs(maximizing_player_id - 1)])
+
+        return margin
 
     if transposition_table is None:
         transposition_table = {}
@@ -123,8 +184,7 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
             alpha = max(alpha, value)
             if alpha >= beta:
                 break  # Beta cutoff
-        for key in keys:
-            transposition_table[key] = [value, alpha, beta, player]
+        transposition_table[keys[0]] = [value, alpha, beta, player]
         return value
     else:
         value = float('inf')
@@ -133,11 +193,8 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
             beta = min(beta, value)
             if beta <= alpha:
                 break  # Alpha cutoff
-        for key in keys:
-            transposition_table[key] = [value, alpha, beta, player]
+        transposition_table[keys[0]] = [value, alpha, beta, player]
         return value
-
-
 
 
 def minimax_search(game,
@@ -187,12 +244,15 @@ def minimax_search(game,
 
 
 def main(_):
+    global num_rows, num_cols
     # Time how long it takes for game to finish
     start_time = time.time()
 
     games_list = pyspiel.registered_names()
     assert "dots_and_boxes" in games_list
-    game_string = "dots_and_boxes(num_rows=4,num_cols=4)"
+    num_rows = 5
+    num_cols = 5
+    game_string = "dots_and_boxes(num_rows=" + str(num_rows) + ",num_cols=" + str(num_cols) + ")"
     print("Creating game: {}".format(game_string))
 
     game = pyspiel.load_game(game_string)
