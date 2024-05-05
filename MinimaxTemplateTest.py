@@ -8,8 +8,6 @@ from collections import Counter
 minimax_counter = 0
 trans_counter = 0
 
-import numpy as np
-
 def _symmetric_key(state):
     """Generate symmetric keys for the given state."""
 
@@ -22,43 +20,51 @@ def _symmetric_key(state):
         num_cols = int(match.group(1))
         num_rows = int(match.group(2))
 
-    # Assuming state.observation_tensor() returns a flat list
-    observation_tensor = np.array(state.observation_tensor()).reshape(12, 12)
+    # Use the dbns!
 
-    # TODO : This optimization only increases the elapsed time (roughly x3) while the calls to minimax stay the same???
-
-    # TODO : Use state.dbn_string() instead of the obs tensor!!!!
     dbns = state.dbn_string()
-    formatted_dbn_string = []
-    for i in range(0, num_rows*2+1):
-        if i % 2 == 0:
-            formatted_dbn_string.append([dbns[0:num_cols]])
-            dbns = dbns[num_cols:]
-        else:
-            formatted_dbn_string.append([dbns[0:num_cols+1]])
-            dbns = dbns[num_cols+1:]
+
+    num_horiz_lines = num_cols * (1 + num_rows)
+    formatted_dbn_string = [dbns[0:num_horiz_lines], dbns[num_horiz_lines:]]
+
+    horiz_string = formatted_dbn_string[0]
+    split_array = [''.join(horiz_string[i:i + num_cols]) for i in range(0, len(horiz_string), num_cols)]
+    formatted_dbn_string[0] = split_array
+
+    vert_string = formatted_dbn_string[1]
+    split_array = [''.join(vert_string[i:i + num_rows+1]) for i in range(0, len(vert_string), num_rows+1)]
+    split_array_formatted = []
+    for i in range(len(split_array[0])):
+        split_array_formatted.append(''.join([elem[i] for elem in split_array]))
+    formatted_dbn_string[1] = split_array_formatted
+
+    # print("DBN String")
+    # print(formatted_dbn_string)
 
     keys = []
-
-    # TODO: run program again to see diagrams it's rows first then columns, so 2 arrays each having multiple subarrays, but its easy to flip after
-
-    # Create keys
-    print(formatted_dbn_string)
-
     # Normal key
-    key = ''
-    for numarray in formatted_dbn_string:
-        key += str(numarray[0])
-    keys.append(key)
-
+    keys.append(''.join([''.join(inner) for inner in formatted_dbn_string]))
+    # Horizontal symmetry
+    horiz_lines = formatted_dbn_string[0][::-1]
+    keys.append(''.join([''.join(inner) for inner in [horiz_lines, formatted_dbn_string[1]]]))
     # Vertical symmetry
-
-    keys = [''.join('1' if val == 1.0 else '0' for val in observation_tensor.flat),
-            ''.join('1' if val == 1.0 else '0' for val in np.flip(observation_tensor, axis=0).flat),
-            ''.join('1' if val == 1.0 else '0' for val in np.flip(observation_tensor, axis=1).flat),
-            ''.join('1' if val == 1.0 else '0' for val in np.flip(np.flip(observation_tensor, axis=0), axis=1).flat)]
+    vert_lines = formatted_dbn_string[1][::-1]
+    keys.append(''.join([''.join(inner) for inner in [formatted_dbn_string[0], vert_lines]]))
+    # Both symmetries
+    keys.append(''.join([''.join(inner) for inner in [horiz_lines, vert_lines]]))
+    # print("Symmetries")
+    # print([horiz_lines, vert_lines])
 
     # TODO : If it's a square game, add diagonal symmetry
+
+    # # Assuming state.observation_tensor() returns a flat list
+    # observation_tensor = np.array(state.observation_tensor()).reshape(12, 12)
+    # # Vertical symmetry
+    #
+    # keys = [''.join('1' if val == 1.0 else '0' for val in observation_tensor.flat),
+    #         ''.join('1' if val == 1.0 else '0' for val in np.flip(observation_tensor, axis=0).flat),
+    #         ''.join('1' if val == 1.0 else '0' for val in np.flip(observation_tensor, axis=1).flat),
+    #         ''.join('1' if val == 1.0 else '0' for val in np.flip(np.flip(observation_tensor, axis=0), axis=1).flat)]
     # keys = [''.join('1' if val == 1.0 else '0' for val in state.observation_tensor())]
 
     return keys
@@ -80,8 +86,8 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
       The optimal value of the sub-game starting in state
     """
 
-    print(state.dbn_string())
-    print(state)
+    # print(state.dbn_string())
+    # print(state)
 
     global minimax_counter, trans_counter
     minimax_counter += 1
@@ -186,7 +192,7 @@ def main(_):
 
     games_list = pyspiel.registered_names()
     assert "dots_and_boxes" in games_list
-    game_string = "dots_and_boxes(num_rows=3,num_cols=3)"
+    game_string = "dots_and_boxes(num_rows=4,num_cols=4)"
     print("Creating game: {}".format(game_string))
 
     game = pyspiel.load_game(game_string)
