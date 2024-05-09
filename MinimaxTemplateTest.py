@@ -155,7 +155,7 @@ def _minimax(state, maximizing_player_id, alpha=float('-inf'), beta=float('inf')
 
     keys = _symmetric_key(state)
 
-    print(len(transposition_table))
+    # print(len(transposition_table))
 
     for key in keys:
         if key in transposition_table:
@@ -237,8 +237,8 @@ def main(_):
 
     games_list = pyspiel.registered_names()
     assert "dots_and_boxes" in games_list
-    num_rows = 3
-    num_cols = 3
+    num_rows = 5
+    num_cols = 5
     game_string = "dots_and_boxes(num_rows=" + str(num_rows) + ",num_cols=" + str(num_cols) + ")"
     print("Creating game: {}".format(game_string))
 
