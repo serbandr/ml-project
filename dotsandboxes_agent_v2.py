@@ -97,19 +97,29 @@ class Agent(pyspiel.Bot):
         game = state.get_game()
         game_paras = game.get_parameters()
         num_rows, num_cols = game_paras["num_rows"], game_paras["num_cols"]
+
         # dbn_string representation of the current game state
         dbn = state.dbn_string()
         dbn = np.array(list(dbn), dtype='int')
         # split the dbn string to horizontal & vertical edges
         h_edges, v_edges = np.split(dbn, [(num_rows + 1) * num_cols])
-        # reshape them to facilitate sliding window
-        h_edges, v_edges = h_edges.reshape([num_rows + 1, num_cols]), v_edges.reshape([num_rows, num_cols + 1])
+
+        # padding the h_edges and v_edges
+        nr = max(num_rows, 4)
+        nc = max(num_cols, 4)
+        padded_h_edges = np.ones((nr + 1, nc), dtype='int')
+        padded_h_edges[:num_rows + 1, :num_cols] = h_edges.reshape(num_rows + 1, num_cols)
+
+        padded_v_edges = np.ones((nr, nc + 1), dtype='int')
+        padded_v_edges[:num_rows, :num_cols + 1] = v_edges.reshape(num_rows, num_cols + 1)
+
+        h_edges, v_edges = padded_h_edges, padded_v_edges
 
         """Using 4x4 window to convolut over the whole game board(first version with stride = 1)"""
         best_actions = {}
         # print(f"----Original_state----:\n{state}")
-        for r_offset in range(num_rows - 4 + 1):
-            for c_offset in range(num_cols - 4 + 1):
+        for r_offset in range(nr - 4 + 1):
+            for c_offset in range(nc - 4 + 1):
                 #calculate the dbn_string of the region on which our window currently covers.#
                 h_window = h_edges[r_offset: r_offset + 5, c_offset: c_offset + 4]
                 h_window = h_window.reshape([-1])
@@ -149,19 +159,32 @@ class Agent(pyspiel.Bot):
                 action = output.action
                 # print(f"action {action} -> ", end="")
 
-                # Mapping the action back to the original board
+                # Mapping the action back to the padded board
                 if action < 20:  # horizontal edges
-                    action = action + c_offset + r_offset * num_cols + action // 4 * (num_cols - 4)
+                    action = action + c_offset + r_offset * nc + action // 4 * (nc - 4)
                 else:
-                    action = (num_cols * (num_rows + 1) - 20) + action + c_offset + r_offset * (num_cols + 1) + (
-                                action - 20) // 5 * (num_cols - 4)
+                    action = (nc * (nr + 1) - 20) + action + c_offset + r_offset * (nc + 1) + (
+                                action - 20) // 5 * (nc - 4)
                 # print(action)
                 # update the dictionary for action-q_value pair
                 if action not in best_actions.keys():
                     best_actions[action] = 0
                 best_actions[action] += 1
         # print(best_actions)
+        # TODO: trying different optimal policy choosing methods
+        """
+            Current method: majority vote among all the window games
+            For example, get the q_value and adding them up? 
+        """
         optimal_action = max(best_actions, key=best_actions.get)
+
+        # Mapping the action on the padded board back to the original board
+        if optimal_action < (nr + 1) * nc:  # horizontal edge
+            optimal_action = optimal_action // nc * num_cols + optimal_action % nc
+        else:
+            offset = optimal_action - (nr + 1) * nc
+            optimal_action = (num_rows + 1) * num_cols + offset // (nc + 1) * (num_cols + 1) + offset % (nc + 1)
+
         # print(optimal_action)
         # print(optimal_action in state.legal_actions())
         return optimal_action
