@@ -20,6 +20,8 @@ from open_spiel.python.rl_environment import TimeStep
 import dqn_v2
 import os
 
+import random
+
 
 logger = logging.getLogger('be.kuleuven.cs.dtai.dotsandboxes')
 
@@ -176,7 +178,9 @@ class Agent(pyspiel.Bot):
             Current method: majority vote among all the window games
             For example, get the q_value and adding them up? 
         """
-        optimal_action = max(best_actions, key=best_actions.get)
+        optimal_val = best_actions.get(max(best_actions, key=best_actions.get))
+        # randomly pick up one among the best actions.
+        optimal_action = random.choice([k for k,v in best_actions.items() if v == optimal_val])
 
         # Mapping the action on the padded board back to the original board
         if optimal_action < (nr + 1) * nc:  # horizontal edge
